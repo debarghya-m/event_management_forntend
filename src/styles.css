@@ -1,0 +1,19 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100vh;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  /* background: linear-gradient(55deg, #043582, #2bc1f6); */
+  background-image: url("./assets/img/pngegg.png");
+  background-size: cover;
+  background-position-y: 100px;
+  background-color: #043582;
+}
+table {
+  background-color: transparent !important;
+  color: white !important;
+}

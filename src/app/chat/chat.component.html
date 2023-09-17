@@ -1,0 +1,204 @@
+<section class="msger">
+  <header class="msger-header">
+    <div class="msger-header-title" (click)="leaveChat()">
+      <i class="fas fa-comment-alt"></i> <- Leave Inbox
+    </div>
+    <div class="msger-header-options">
+      <span><i class="fas fa-cog"></i></span>
+    </div>
+  </header>
+
+  <main id="inbox" class="msger-chat">
+    <div class="msg left-msg" *ngIf="guestDetails.isAdmin">
+      <div class="msg-bubble">
+        <div class="msg-info">
+          <div class="msg-info-name">{{ guestDetails.userName }}</div>
+        </div>
+        <div class="msg-text">
+          Welcome {{ userData.userName }} to our tech wonderland! We're thrilled
+          you're here for a day of innovation, inspiration, and interaction.
+          Let's make this event a memorable experience together.
+        </div>
+      </div>
+    </div>
+    <div *ngFor="let chat of chatList">
+      <div
+        class="msg left-msg"
+        *ngIf="
+          chat.userId === roomId &&
+          (chat.roomId === userData._id ||
+            (chat.roomId === 'all' && chat.date_time >= userData.createdAt))
+        "
+      >
+        <div class="msg-bubble">
+          <div class="msg-info">
+            <div class="msg-info-name">{{ guestDetails.userName }}</div>
+            <div class="msg-info-time">
+              {{
+                chat.date_time
+                  ? (chat.date_time | date : "dd MMMM y, hh:mm a")
+                  : "NA"
+              }}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            (click)="openQuiz(chat.quizId)"
+            class="btn btn-warning msg-text"
+            *ngIf="chat.quizId"
+            [disabled]="
+              answerList.includes(chat.quizId) ||
+              deleteList.includes(chat.quizId)
+            "
+          >
+            {{
+              answerList.includes(chat.quizId)
+                ? "Already answered"
+                : deleteList.includes(chat.quizId)
+                ? "Sorry, quiz removed"
+                : chat.message
+            }}
+          </button>
+          <img
+            style="max-height: 250px"
+            *ngIf="chat.img && chat.img !== ''"
+            [src]="chat.img"
+            alt="img"
+          />
+          <div class="msg-text" *ngIf="!chat.quizId">
+            {{ chat.message }}
+          </div>
+          <div
+            class="msg-text"
+            *ngIf="
+              chat.quizId &&
+              chat.rightOption &&
+              chat.rightOption !== '' &&
+              answerList.includes(chat.quizId)
+            "
+          >
+            Right answer: {{ chat.rightOption }}
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="msg right-msg"
+        *ngIf="
+          chat.userId === userData._id &&
+          (chat.roomId === roomId ||
+            (chat.roomId === 'all' && chat.date_time >= guestDetails.createdAt))
+        "
+      >
+        <div class="msg-bubble">
+          <div class="msg-info">
+            <div class="msg-info-name">You</div>
+            <div class="msg-info-time">
+              {{
+                chat.date_time
+                  ? (chat.date_time | date : "dd MMMM y, hh:mm a")
+                  : "NA"
+              }}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            (click)="openQuiz(chat.quizId)"
+            class="btn btn-warning msg-text"
+            *ngIf="chat.quizId"
+            [disabled]="
+              answerList.includes(chat.quizId) ||
+              deleteList.includes(chat.quizId)
+            "
+          >
+            {{
+              answerList.includes(chat.quizId)
+                ? "Already answered"
+                : deleteList.includes(chat.quizId)
+                ? "Sorry, quiz removed"
+                : chat.message
+            }}
+          </button>
+          <img
+            style="max-height: 250px"
+            *ngIf="chat.img && chat.img !== ''"
+            [src]="chat.img"
+            alt="img"
+          />
+          <div class="msg-text" *ngIf="!chat.quizId">
+            {{ chat.message }}
+          </div>
+          <div
+            class="msg-text"
+            *ngIf="
+              chat.quizId &&
+              chat.rightOption !== '' &&
+              answerList.includes(chat.quizId)
+            "
+          >
+            Right answer: {{ chat.rightOption }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="msger-inputarea">
+    <input
+      type="text"
+      class="msger-input"
+      [(ngModel)]="messageKey"
+      placeholder="Enter your message..."
+    />
+    <button class="send-btn" (click)="sendMessage()">Send</button>
+  </div>
+  <div class="card-overlay" *ngIf="popUpQuiz">
+    <div class="card-popup">
+      <h5>Question: {{ popUpQuiz.question }}</h5>
+      <div class="options">
+        <div *ngIf="popUpQuiz.option1 && popUpQuiz.option1 !== ''">
+          <input type="radio" name="answer" value="{{ popUpQuiz.option1 }}" />
+          <label for="{{ popUpQuiz.option1 }}">{{ popUpQuiz.option1 }}</label>
+        </div>
+        <div *ngIf="popUpQuiz.option2 && popUpQuiz.option2 !== ''">
+          <input type="radio" name="answer" value="{{ popUpQuiz.option2 }}" />
+          <label for="{{ popUpQuiz.option2 }}">{{ popUpQuiz.option2 }}</label>
+        </div>
+        <div *ngIf="popUpQuiz.option3 && popUpQuiz.option3 !== ''">
+          <input type="radio" name="answer" value="{{ popUpQuiz.option3 }}" />
+          <label for="{{ popUpQuiz.option3 }}">{{ popUpQuiz.option3 }}</label>
+        </div>
+        <div *ngIf="popUpQuiz.option4 && popUpQuiz.option4 !== ''">
+          <input type="radio" name="answer" value="{{ popUpQuiz.option4 }}" />
+          <label for="{{ popUpQuiz.option4 }}">{{ popUpQuiz.option4 }}</label>
+        </div>
+        <div
+          *ngIf="
+            (!popUpQuiz.option1 || popUpQuiz.option1 === '') &&
+            (!popUpQuiz.option2 || popUpQuiz.option2 === '') &&
+            (!popUpQuiz.option3 || popUpQuiz.option3 === '') &&
+            (!popUpQuiz.option4 || popUpQuiz.option4 === '')
+          "
+        >
+          <input
+            type="text"
+            id="check-input"
+            name="check-input"
+            placeholder="Enter your answer"
+          />
+        </div>
+      </div>
+
+      <div class="btn-popup">
+        <button (click)="savePopup()" type="button" class="btn btn-pop">
+          Submit
+        </button>
+        <button (click)="closePopUp()" type="button" class="btn btn-pop">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

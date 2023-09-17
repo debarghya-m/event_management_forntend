@@ -1,0 +1,79 @@
+<section>
+  <div class="logo-banner powered-by">
+    <img src="../../assets/img/logo.jpeg" alt="logo" />
+    <img src="../../assets/img/logo1.jpeg" alt="logo" />
+  </div>
+  <div class="card mx-auto register-card">
+    <div class="card-body register-card-body">
+      <h5 class="card-header text-center">
+        {{ isAdmin ? "Admin" : "" }} Login to Dashboard
+      </h5>
+      <form
+        class="register-form"
+        [formGroup]="registerForm"
+        (ngSubmit)="onSubmit()"
+      >
+        <div class="form-row">
+          <div class="form-group col">
+            <label>User Name</label>
+            <input
+              type="text"
+              formControlName="userName"
+              class="form-control"
+              [ngClass]="{
+                'is-invalid': submitted && (f.userName.errors || isWrong)
+              }"
+            />
+            <div
+              *ngIf="submitted && f.userName.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.userName.errors.required || isWrong">
+                User Name is required
+              </div>
+            </div>
+            <div
+              class="invalid-feedback"
+              *ngIf="isWrong && registerForm.controls.userName.value !== ''"
+            >
+              Wrong Credential
+            </div>
+          </div>
+        </div>
+        <div *ngIf="isAdmin" class="form-row">
+          <div class="form-group col">
+            <label>Password</label>
+            <input
+              type="password"
+              formControlName="password"
+              class="form-control"
+              [ngClass]="{
+                'is-invalid': submitted && (f.password.errors || isWrong)
+              }"
+            />
+            <div
+              *ngIf="submitted && f.password.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.password.errors.required || isWrong">
+                Password is required
+              </div>
+              <div *ngIf="f.password.errors.minlength">
+                Password must be at least 6 characters
+              </div>
+            </div>
+            <div class="invalid-feedback" *ngIf="isWrong && isAdmin">
+              Wrong Credential
+            </div>
+          </div>
+        </div>
+        <div class="d-grid gap-2 mx-auto register-btn">
+          <button class="btn btn-primary">Login</button>
+        </div>
+      </form>
+      <div class="register-footer">
+        <h5>New User ? <a routerLink="/register">Register Now</a></h5>
+      </div>
+    </div>
+  </div>
+</section>

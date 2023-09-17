@@ -1,0 +1,89 @@
+<section>
+  <div class="logo-banner powered-by">
+    <img src="../../assets/img/logo.jpeg" alt="logo" />
+    <img src="../../assets/img/logo1.jpeg" alt="logo" />
+  </div>
+  <div class="card mx-auto register-card">
+    <div class="card-body register-card-body">
+      <h5 class="card-header text-center">Register For The Event</h5>
+      <form
+        class="register-form"
+        [formGroup]="registerForm"
+        (ngSubmit)="onSubmit()"
+      >
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Name</label>
+            <input
+              type="text"
+              formControlName="name"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+            />
+            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+              <div *ngIf="f.name.errors.required">Name is required</div>
+            </div>
+          </div>
+          <div class="form-group col">
+            <label>User Name</label>
+            <input
+              type="text"
+              formControlName="userName"
+              class="form-control"
+              [ngClass]="{
+                'is-invalid': submitted && (f.userName.errors || !uniqueUser)
+              }"
+            />
+            <div
+              *ngIf="submitted && f.userName.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.userName.errors.required || !uniqueUser">
+                User Name is required
+              </div>
+            </div>
+            <div
+              *ngIf="!uniqueUser && registerForm.controls.userName.value !== ''"
+              class="invalid-feedback"
+            >
+              <div>Username already taken</div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="form-row">
+          <div class="form-group col">
+            <label>Profile Picture (Optional)</label>
+            <input
+              type="file"
+              formControlName="profilePicture"
+              [(ngModel)]="profilePicture"
+              (change)="uploadDp($event)"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.profilePicture.errors }"
+            />
+          </div>
+          <div
+            *ngIf="dpIssue === 'size' || dpIssue === 'extension'"
+            class="invalid-feedback"
+            style="display: block !important"
+          >
+            {{
+              dpIssue === "size"
+                ? "Max file size is 1mb"
+                : "Support jpeg, jpg or png only"
+            }}
+          </div>
+        </div> -->
+        <div class="d-grid gap-2 mx-auto register-btn">
+          <button class="btn btn-primary">Register</button>
+          <button class="btn btn-reset" type="reset" (click)="onReset()">
+            Reset
+          </button>
+        </div>
+      </form>
+      <div class="register-footer">
+        <h5>Have account ? <a routerLink="/">Login Now</a></h5>
+      </div>
+    </div>
+  </div>
+</section>

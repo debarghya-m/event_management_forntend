@@ -1,0 +1,355 @@
+<section>
+  <div class="alert alert-dark" [class.alert-add]="toast" role="alert">
+    {{ toastMsg }}
+  </div>
+  <nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand">hello, {{ userData.userName }}</a>
+      <select
+        (ngModelChange)="tabChange($event)"
+        [(ngModel)]="currentTab"
+        class="form-select w-25"
+        id="mySelect"
+        *ngIf="isAdmin"
+      >
+        <option value="chat">Chat</option>
+        <option value="quiz">Quiz</option>
+        <option value="broadcast">Broadcast</option>
+      </select>
+      <form class="d-flex" role="search" style="gap: 1rem">
+        <button class="btn btn-primary" type="submit" (click)="openPdf()">
+          Event itinerary
+        </button>
+        <button class="btn btn-outline-danger" type="submit" (click)="logout()">
+          Logout
+        </button>
+      </form>
+    </div>
+    <div class="container-fluid" *ngIf="currentTab === 'chat'">
+      <div class="input-group">
+        <span class="input-group-text" id="basic-addon1">@</span>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Username"
+          aria-label="searchKey"
+          [(ngModel)]="searchKey"
+          (ngModelChange)="filterInbox()"
+          aria-describedby="basic-addon1"
+        />
+      </div>
+    </div>
+
+    <h5 class="user-count" *ngIf="isAdmin && currentTab === 'chat'">
+      Total Users: {{ totalUserCount }}
+    </h5>
+  </nav>
+  <div *ngIf="currentTab === 'chat'">
+    <div *ngFor="let data of userList" (click)="openChat(data)">
+      <div
+        class="inbox-card"
+        *ngIf="
+          data._id !== userData._id && ((!isAdmin && data.isAdmin) || isAdmin)
+        "
+      >
+        <div class="inbox-card-left">
+          <img
+            class="dp"
+            [src]="
+              data.profilePicture
+                ? data.profilePicture
+                : '../../assets/img/blank.webp'
+            "
+            alt=""
+            srcset=""
+          />
+          <h5>{{ data.userName }}</h5>
+        </div>
+        <div class="inbox-card-right">
+          {{ data.status ? "online" : "offline" }}
+          <span
+            class="symbol"
+            [class.online]="data.status"
+            [class.offline]="!data.status"
+          ></span>
+          <div>{{ data.count ? "(" + data.count + ")" : "" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <form
+    *ngIf="currentTab === 'quiz'"
+    class="register-form"
+    [formGroup]="registerForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <div class="form-row">
+      <div class="form-group col">
+        <label>Question</label>
+        <input
+          type="text"
+          formControlName="question"
+          class="form-control"
+          [ngClass]="{
+            'is-invalid': submitted && f.question.errors
+          }"
+        />
+        <div *ngIf="submitted && f.question.errors" class="invalid-feedback">
+          <div *ngIf="f.question.errors.required">Question is required</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group checkbox-row">
+        <input
+          [value]="isText"
+          (change)="toggleOption()"
+          type="checkbox"
+          class="checkbox"
+        />
+        <label>Allow text input as answer</label>
+      </div>
+    </div>
+    <div class="form-row" *ngIf="!isText">
+      <div class="form-group col">
+        <label>Option1</label>
+        <input
+          type="text"
+          formControlName="option1"
+          class="form-control"
+          [ngClass]="{
+            'is-invalid': submitted && f.option1.errors
+          }"
+        />
+        <div *ngIf="submitted && f.option1.errors" class="invalid-feedback">
+          <div *ngIf="f.option1.errors.required">Option1 is required</div>
+        </div>
+      </div>
+      <div class="form-group col">
+        <label>Option2</label>
+        <input
+          type="text"
+          formControlName="option2"
+          class="form-control"
+          [ngClass]="{
+            'is-invalid': submitted && f.option2.errors
+          }"
+        />
+        <div *ngIf="submitted && f.option2.errors" class="invalid-feedback">
+          <div *ngIf="f.option2.errors.required">Option2 is required</div>
+        </div>
+      </div>
+      <div class="form-group col">
+        <label>Option3</label>
+        <input
+          type="text"
+          formControlName="option3"
+          class="form-control"
+          [ngClass]="{
+            'is-invalid': submitted && f.option3.errors
+          }"
+        />
+        <div *ngIf="submitted && f.option3.errors" class="invalid-feedback">
+          <div *ngIf="f.option3.errors.required">Option3 is required</div>
+        </div>
+      </div>
+      <div class="form-group col">
+        <label>Option4</label>
+        <input
+          type="text"
+          formControlName="option4"
+          class="form-control"
+          [ngClass]="{
+            'is-invalid': submitted && f.option4.errors
+          }"
+        />
+        <div *ngIf="submitted && f.option4.errors" class="invalid-feedback">
+          <div *ngIf="f.option4.errors.required">Option4 is required</div>
+        </div>
+      </div>
+      <div class="form-group col">
+        <label>Right Option</label>
+        <select formControlName="rightOption" class="form-control">
+          <option value="" disabled>Please select a option</option>
+          <option value="option1">Option 1</option>
+          <option value="option2">Option 2</option>
+          <option value="option3">Option 3</option>
+          <option value="option4">Option 4</option>
+        </select>
+      </div>
+    </div>
+    <div class="d-grid gap-2 mx-auto register-btn">
+      <button class="btn btn-home-register">Create</button>
+    </div>
+  </form>
+  <table class="table" *ngIf="isAdmin && currentTab === 'quiz'">
+    <thead>
+      <tr>
+        <th scope="col">Question</th>
+        <th scope="col">Date</th>
+        <th scope="col">Action</th>
+        <th scope="col">Result</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of quizList">
+        <td>{{ data.question }}</td>
+        <td>
+          {{
+            data.date_time
+              ? (data.date_time | date : "dd MMMM y, hh:mm a")
+              : "NA"
+          }}
+        </td>
+        <td>
+          <button
+            (click)="broadCastQuiz(data)"
+            type="button"
+            class="btn btn-outline-primary"
+          >
+            Broadcast
+          </button>
+        </td>
+        <td>
+          <button
+            (click)="openQuiz(data)"
+            type="button"
+            class="btn btn-outline-primary"
+          >
+            Analytics
+          </button>
+        </td>
+        <td>
+          <button
+            *ngIf="deleteId !== data._id"
+            (click)="deleteQuiz(data)"
+            type="button"
+            class="btn btn-outline-danger"
+          >
+            Delete
+          </button>
+          <div *ngIf="deleteId === data._id">
+            <h3>Are you sure ?</h3>
+            <div style="display: flex; gap: 0.5rem; justify-content: center">
+              <button
+                (click)="confirmDelete(data)"
+                type="button"
+                class="btn btn-outline-danger"
+              >
+                Yes
+              </button>
+              <button
+                (click)="cancelDelete(data)"
+                type="button"
+                class="btn btn-outline-primary"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- <div class="container-fluid" *ngIf="isAdmin && currentTab === 'broadcast'">
+    <div class="input-group">
+      <textarea
+        type="text"
+        class="form-control"
+        placeholder="Broadcast message"
+        aria-label="broadCastMessage"
+        [(ngModel)]="broadCastMessage"
+        aria-describedby="basic-addon1"
+      ></textarea>
+      <span
+        class="input-group-text broadcast"
+        (click)="broadcast()"
+        id="basic-addon1"
+        >Broadcast</span
+      >
+    </div>
+  </div> -->
+  <form
+    *ngIf="currentTab === 'broadcast'"
+    class="register-form"
+    [formGroup]="broadcastForm"
+    (ngSubmit)="onBroadcastSubmit()"
+  >
+    <div class="form-row">
+      <div class="form-group col">
+        <label>Message</label>
+        <input
+          type="text"
+          formControlName="message"
+          class="form-control"
+          [ngClass]="{
+            'is-invalid': issubmitted && b.message.errors
+          }"
+        />
+        <div *ngIf="issubmitted && b.message.errors" class="invalid-feedback">
+          <div *ngIf="b.message.errors.required">Message is required</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col">
+        <label>Image (Maximum size < 50kb)</label>
+        <input
+          type="file"
+          formControlName="profilePicture"
+          [(ngModel)]="profilePicture"
+          (change)="uploadDp($event)"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': issubmitted && b.profilePicture.errors }"
+        />
+      </div>
+      <div
+        *ngIf="dpIssue === 'size' || dpIssue === 'extension'"
+        class="invalid-feedback"
+        style="display: block !important"
+      >
+        {{
+          dpIssue === "size"
+            ? "Max file size is 50kb"
+            : "Support jpeg, jpg or png only"
+        }}
+      </div>
+    </div>
+    <div class="d-grid gap-2 mx-auto register-btn">
+      <button class="btn btn-home-register">Create</button>
+    </div>
+  </form>
+  <table class="table" *ngIf="isAdmin && currentTab === 'broadcast'">
+    <thead>
+      <tr>
+        <th scope="col">Message</th>
+        <th scope="col">Image</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of broadcastList">
+        <td>{{ data.message }}</td>
+        <td>
+          <img
+            style="max-height: 100px"
+            *ngIf="data.img && data.img !== ''"
+            [src]="data.img"
+            [alt]="data.message"
+          />
+          <span *ngIf="!data.img">No Image</span>
+        </td>
+        <td>
+          <button
+            (click)="broadcast(data)"
+            type="button"
+            class="btn btn-outline-primary"
+          >
+            Broadcast
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

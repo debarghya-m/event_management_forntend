@@ -1,0 +1,49 @@
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid" style="gap: 1rem">
+    <button
+      (click)="exitQuizAnalytics()"
+      class="btn btn-outline-warning"
+      type="submit"
+    >
+      Leave analytics
+    </button>
+    <a class="navbar-brand">Question: {{ quizDetails.question }}</a>
+    <a
+      class="navbar-brand"
+      *ngIf="quizDetails.rightOption && quizDetails.rightOption !== ''"
+      >Answer: {{ quizDetails.rightOption }}</a
+    >
+    <div class="input-group">
+      <span class="input-group-text" id="basic-addon1">Filter By</span>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="answer"
+        aria-label="searchKey"
+        [(ngModel)]="searchKey"
+        (ngModelChange)="filterInbox()"
+        aria-describedby="basic-addon1"
+      />
+    </div>
+  </div>
+</nav>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Username</th>
+      <th scope="col">Answer</th>
+      <th scope="col">Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of quizAnalytics">
+      <td>{{ data.userName }}</td>
+      <td>{{ data.answer }}</td>
+      <td>
+        {{
+          data.date_time ? (data.date_time | date : "dd MMMM y, hh:mm a") : "NA"
+        }}
+      </td>
+    </tr>
+  </tbody>
+</table>

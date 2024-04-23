@@ -1,27 +1,40 @@
-# Frontend
+# Event Management Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.19.
+This is the frontend application for managing events, providing an intuitive interface for event organizers and participants.
 
-## Development server
+## Description
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+The Event Management Frontend is a web-based application designed to streamline the process of organizing and participating in events. It offers features for creating, managing, and attending events, enhancing the overall experience for all stakeholders involved.
 
-## Code scaffolding
+## Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- **Event Creation:** Organizers can create new events, specifying details such as date, time, location, agenda, etc.
+- **Participant Registration:** Users can register for events, providing necessary information and preferences.
+- **Event Management:** Organizers can manage event logistics, track registrations, send updates, and communicate with participants.
+- **User Profiles:** Users have personalized profiles where they can view past events, manage preferences, and update information.
+- **Interactive Interface:** Intuitive and user-friendly interface for easy navigation and interaction.
 
-## Build
+## Technologies Used
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+- **Angular:** Frontend framework for building single-page applications.
+- **HTML/CSS/JavaScript:** Core web technologies for building the user interface and interactivity.
+- **Bootstrap:** Frontend framework for responsive design and layout.
+- **Firebase (or other backend service):** Backend service for managing data storage and authentication.
 
-## Running unit tests
+## Getting Started
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+To set up the project locally, follow these steps:
 
-## Running end-to-end tests
+1. Clone the repository: `git clone https://github.com/debarghya-m/event_management_forntend.git`
+2. Navigate to the project directory.
+3. Install dependencies: `npm install`
+4. Start the development server: `ng serve`
+5. Open your browser and visit `http://localhost:4200/`.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Contributing
 
-## Further help
+Contributions are welcome! If you have any suggestions, improvements, or feature requests, please feel free to open an issue or submit a pull request.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## License
+
+This project is licensed under the [MIT License](LICENSE).
